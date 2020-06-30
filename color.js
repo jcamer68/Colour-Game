@@ -1,5 +1,9 @@
 var squareNum = 6;
-var colors = generateColors(squareNum);
+TBU = chosenColor();
+
+var shades = document.querySelector("#contrast");
+mode = true;
+var colors = generateColors(squareNum, TBU[0], TBU[1], TBU[2], mode);
 var h1 = document.querySelector("h1");
 var squares = document.querySelectorAll(".square");
 var chosen = pickColor();
@@ -11,18 +15,57 @@ var hard = document.querySelector("#hard");
 var Hscore = document.querySelector("#high");
 var score = document.querySelector("#score");
 
+
 var win = false;
 var lose = false;
 var current = 0;
 var Hcurrent = 0;
 var change = true;
 
+shades.addEventListener("click", function() {
+    shades.classList.toggle("selected");
+    if (mode == true) {
+        change = true;
+        mode = false;
+            colors = generateColors(squareNum, TBU[0], TBU[1], TBU[2], mode);
+
+            chosen = pickColor();
+            colorDisplay.textContent = chosen;
+            for (var i = 0; i < squares.length; i++) {
+                if (colors[i]) {
+                    squares[i].style.backgroundColor = colors[i];
+                } else {
+                    squares[i].style.display = "none";
+                }
+            }
+    } else {
+        change = true;
+        mode = true;
+            colors = generateColors(squareNum, TBU[0], TBU[1], TBU[2], mode);
+
+            chosen = pickColor();
+            colorDisplay.textContent = chosen;
+            for (var i = 0; i < squares.length; i++) {
+                if (colors[i]) {
+                    squares[i].style.backgroundColor = colors[i];
+                } else {
+                    squares[i].style.display = "none";
+                }
+            }
+    }
+    console.log(mode);
+
+});
+
 easy.addEventListener("click", function() {
+    change = true;
     easy.classList.add("selected");
     hard.classList.remove("selected");
+    TBU = chosenColor();
+
     squareNum = 3;
-    colors = generateColors(squareNum);
-    console.log(colors);
+    colors = generateColors(squareNum, TBU[0], TBU[1], TBU[2], mode);
+
     chosen = pickColor();
     colorDisplay.textContent = chosen;
     for (var i = 0; i < squares.length; i++) {
@@ -36,10 +79,14 @@ easy.addEventListener("click", function() {
 
 
 hard.addEventListener("click", function() {
+    change = true;
     hard.classList.add("selected");
     easy.classList.remove("selected");
+     TBU = chosenColor();
+     console.log(TBU);
+     console.log(TBU[0]);
     squareNum = 6;
-    colors = generateColors(squareNum);
+    colors = generateColors(squareNum, TBU[0], TBU[1], TBU[2], mode);
         console.log(colors);
         chosen = pickColor();
         colorDisplay.textContent = chosen;
@@ -52,12 +99,15 @@ hard.addEventListener("click", function() {
 
 resetButton.addEventListener("click", function() {
     //generate new colors
-    colors = generateColors(squareNum);
+    TBU = chosenColor();
+    console.log(TBU);
+    console.log(TBU[0]);
+    colors = generateColors(squareNum, TBU[0], TBU[1], TBU[2], mode);
     //pick new random colors
     chosen = pickColor();
     //change colors of squares
     colorDisplay.textContent = chosen;
-    resetButton.textContent = "New Colors"
+    resetButton.textContent = "New Set"
     messageDisplay.textContent = "";
     change = true;
 
@@ -128,26 +178,52 @@ function pickColor() {
     return colors[random];
 }
 
-function generateColors(num) {
+function generateColors(num, red, green, blue, mode) {
     //make an array
     //add num random colors to array
     //return array
     var arr = [];
 
     for (var i = 0; i<num; i++) {
-        arr.push(randomColor());
+        arr.push(randomColor(red, green, blue, mode));
     }
 
     return arr;
 }
 
-function randomColor() {
+function chosenColor() {
     //pick a red
+    console.log(current);
+    var chosenColors = [];
     var r = Math.floor(Math.random() * 256)
-    //pick a green
+    chosenColors[0] = r;
     var g = Math.floor(Math.random() * 256)
-    //pick a blue
+    chosenColors[1] = g;
     var b = Math.floor(Math.random() * 256)
-    return "rgb(" + r + ", " + g + ", " + b + ")";
+    chosenColors[2] = b;
+    return chosenColors;
+}
+
+function randomColor(red,green, blue, mode) {
+    if (mode == true) {
+        //pick a red
+        var r = Math.floor(Math.random() * (256));
+
+        //var r = Math.floor(Math.random() * 256)
+        //pick a green
+        var g = Math.floor(Math.random() * (256));
+
+        //var g = Math.floor(Math.random() * 256)
+        //pick a blue
+        var b = Math.floor(Math.random() * (256));
+
+        //var b = Math.floor(Math.random() * 256)
+        return "rgb(" + r + ", " + g + ", " + b + ")";
+        }
+        else {
+            var num = Math.floor(Math.random() * (256));
+            return "rgb(" + num + ", " + num + ", " + num + ")";
+        }
+
 
 }
